@@ -1,18 +1,12 @@
-type Cell = "X" | "O" | "";
-enum Player {
-  X = "X",
-  O = "O",
-}
-const DRAW = "DRAW" as const;
+import { DRAW, Player } from "./constants/tic-tac-toe";
 
+type Cell = "X" | "O" | "";
 type GameWinner = undefined | "X" | "O" | typeof DRAW;
-type WinningCells = undefined | number[][];
 
 export default class TicTacToe {
   #board: Cell[][] = [];
   #currentPlayerTurn: Player = Player.X;
   #gameWinner: GameWinner = undefined;
-  #winningCells: WinningCells = undefined;
   #isGameOver = false;
 
   constructor() {
@@ -33,7 +27,7 @@ export default class TicTacToe {
   }
 
   makeMove(x: number, y: number): void {
-    if (this.#board[x][y] !== "" || this.#isGameOver) {
+    if (this.#board[x][y] !== "") {
       return;
     }
 
@@ -54,7 +48,7 @@ export default class TicTacToe {
 
     this.#currentPlayerTurn = Player.X;
     this.#gameWinner = undefined;
-    this.#winningCells = undefined;
+    this.#isGameOver = false;
   }
 
   #checkForGameEnd() {
@@ -64,115 +58,52 @@ export default class TicTacToe {
       this.#board[0][0] === this.#board[0][2]
     ) {
       this.#gameWinner = this.#board[0][0];
-      this.#winningCells = [
-        [0, 0],
-        [0, 1],
-        [0, 2],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[1][0] !== "" &&
-      this.#board[1][0] === this.#board[0][1] &&
-      this.#board[1][0] === this.#board[0][2]
+      this.#board[1][0] === this.#board[1][1] &&
+      this.#board[1][0] === this.#board[1][2]
     ) {
       this.#gameWinner = this.#board[1][0];
-      this.#winningCells = [
-        [1, 0],
-        [1, 1],
-        [1, 2],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[2][0] !== "" &&
       this.#board[2][0] === this.#board[2][1] &&
       this.#board[2][0] === this.#board[2][2]
     ) {
       this.#gameWinner = this.#board[2][0];
-      this.#winningCells = [
-        [2, 0],
-        [2, 1],
-        [2, 2],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[0][0] !== "" &&
       this.#board[0][0] === this.#board[1][0] &&
       this.#board[0][0] === this.#board[2][0]
     ) {
       this.#gameWinner = this.#board[0][0];
-      this.#winningCells = [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[0][1] !== "" &&
       this.#board[0][1] === this.#board[1][1] &&
       this.#board[0][1] === this.#board[2][1]
     ) {
       this.#gameWinner = this.#board[0][1];
-      this.#winningCells = [
-        [0, 1],
-        [1, 1],
-        [2, 1],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[0][2] !== "" &&
       this.#board[0][2] === this.#board[1][2] &&
       this.#board[0][2] === this.#board[2][2]
     ) {
       this.#gameWinner = this.#board[0][2];
-      this.#winningCells = [
-        [0, 2],
-        [1, 2],
-        [2, 2],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[0][0] !== "" &&
       this.#board[0][0] === this.#board[1][1] &&
       this.#board[0][0] === this.#board[2][2]
     ) {
       this.#gameWinner = this.#board[0][0];
-      this.#winningCells = [
-        [0, 0],
-        [1, 1],
-        [2, 2],
-      ];
-      return;
-    }
-
-    if (
+    } else if (
       this.#board[0][2] !== "" &&
       this.#board[0][2] === this.#board[1][1] &&
       this.#board[0][2] === this.#board[2][0]
     ) {
       this.#gameWinner = this.#board[0][2];
-      this.#winningCells = [
-        [0, 2],
-        [1, 1],
-        [2, 0],
-      ];
-      return;
     }
 
     if (this.#gameWinner !== undefined) {
       this.#isGameOver = true;
-      return;
     }
 
     const isBoardFilled = this.#board.every((row) =>

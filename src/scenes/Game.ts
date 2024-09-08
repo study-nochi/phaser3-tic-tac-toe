@@ -1,9 +1,13 @@
 import { Scene } from "phaser";
 import TicTacToe from "../TicTacToe";
+import { DRAW, Player } from "../constants/tic-tac-toe";
 
 const SPRITE_ASSET_KEY = "SPRITE_ASSET_KEY";
 
 export class Game extends Scene {
+  #ticTacToe: TicTacToe;
+  #playerTurnTextGameObject: Phaser.GameObjects.Text;
+
   constructor() {
     super("Game");
   }
@@ -16,7 +20,7 @@ export class Game extends Scene {
   }
 
   create() {
-    const ticTacToe = new TicTacToe();
+    this.#ticTacToe = new TicTacToe();
 
     this.add
       .text(240, 50, "Tic-Tac-Toe", {
@@ -26,11 +30,11 @@ export class Game extends Scene {
       })
       .setOrigin(0.5);
 
-    this.add
+    this.#playerTurnTextGameObject = this.add
       .text(240, 600, "X turn", {
         fontSize: "22px",
         fontFamily: "Verdana",
-        color: "blue",
+        color: "red",
       })
       .setOrigin(0.5);
 
@@ -45,9 +49,11 @@ export class Game extends Scene {
     this.#addGamePiece(0, 0);
     this.#addGamePiece(1, 0);
     this.#addGamePiece(2, 0);
+
     this.#addGamePiece(0, 1);
     this.#addGamePiece(0, 2);
     this.#addGamePiece(1, 1);
+
     this.#addGamePiece(1, 2);
     this.#addGamePiece(2, 1);
     this.#addGamePiece(2, 2);
@@ -65,7 +71,39 @@ export class Game extends Scene {
       .setInteractive();
 
     gamePiece.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log(`Clicked on ${x}, ${y}`);
+      console.log("isGameOver", this.#ticTacToe.isGameOver);
+      console.log("gameWinner", this.#ticTacToe.gameWinner);
+
+      if (this.#ticTacToe.isGameOver) {
+        return;
+      }
+
+      const currentPlayer = this.#ticTacToe.currentPlayerTurn;
+      this.#ticTacToe.makeMove(x, y);
+
+      const isNextTurnByO = currentPlayer === Player.X;
+
+      if (currentPlayer === Player.X) {
+        gamePiece.setFrame(0);
+      } else {
+        gamePiece.setFrame(1);
+      }
+
+      if (this.#ticTacToe.isGameOver && this.#ticTacToe.gameWinner !== DRAW) {
+        this.#playerTurnTextGameObject.setText(`${currentPlayer} wins!`);
+        return;
+      }
+
+      if (this.#ticTacToe.isGameOver) {
+        this.#playerTurnTextGameObject.setText(
+          this.#ticTacToe.gameWinner as string
+        );
+        return;
+      }
+
+      this.#playerTurnTextGameObject
+        .setText(`${this.#ticTacToe.currentPlayerTurn} turn`)
+        .setColor(isNextTurnByO ? "green" : "red");
     });
   }
 }
