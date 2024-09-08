@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import TicTacToe from "../TicTacToe";
 
 const SPRITE_ASSET_KEY = "SPRITE_ASSET_KEY";
 
@@ -15,6 +16,8 @@ export class Game extends Scene {
   }
 
   create() {
+    const ticTacToe = new TicTacToe();
+
     this.add
       .text(240, 50, "Tic-Tac-Toe", {
         fontSize: "42px",
