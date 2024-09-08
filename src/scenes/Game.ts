@@ -40,15 +40,29 @@ export class Game extends Scene {
     graphics.lineBetween(30, 402, 450, 402);
 
     this.#addGamePiece(0, 0);
+    this.#addGamePiece(1, 0);
+    this.#addGamePiece(2, 0);
+    this.#addGamePiece(0, 1);
+    this.#addGamePiece(0, 2);
+    this.#addGamePiece(1, 1);
+    this.#addGamePiece(1, 2);
+    this.#addGamePiece(2, 1);
+    this.#addGamePiece(2, 2);
   }
 
   #addGamePiece(x: number, y: number) {
     const pieceSize = 96;
     const xPosition = 50 + (pieceSize + pieceSize / 2) * x;
     const yPosition = 140 + (pieceSize + pieceSize / 2) * y;
-    this.add
+
+    const gamePiece = this.add
       .image(xPosition, yPosition, SPRITE_ASSET_KEY, 2)
       .setScale(6)
-      .setOrigin(0);
+      .setOrigin(0)
+      .setInteractive();
+
+    gamePiece.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log(`Clicked on ${x}, ${y}`);
+    });
   }
 }
