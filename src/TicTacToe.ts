@@ -20,6 +20,18 @@ export default class TicTacToe {
     console.log(this.#board);
   }
 
+  get currentPlayerTurn(): Player {
+    return this.#currentPlayerTurn;
+  }
+
+  get isGameOver(): boolean {
+    return this.#isGameOver;
+  }
+
+  get gameWinner(): GameWinner {
+    return this.#gameWinner;
+  }
+
   makeMove(x: number, y: number): void {
     if (this.#board[x][y] !== "" || this.#isGameOver) {
       return;
